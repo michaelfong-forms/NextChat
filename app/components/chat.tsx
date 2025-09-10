@@ -1002,6 +1002,10 @@ function _Chat() {
   const [isLoading, setIsLoading] = useState(false);
   const { submitKey, shouldSubmit } = useSubmitHandler();
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const [selectedRisk, setSelectedRisk] = useState<string>("");
+  const [selectedRegion, setSelectedRegion] = useState<string>("");
+
   const isScrolledToBottom = scrollRef?.current
     ? Math.abs(
         scrollRef.current.scrollHeight -
@@ -2068,6 +2072,77 @@ function _Chat() {
                 setUserInput={setUserInput}
                 setShowChatSidePanel={setShowChatSidePanel}
               />
+
+              <div style={{ marginBottom: 12 }}>
+                <div>
+                  <strong>Select Risk Level: </strong>
+                  {["Low", "Medium", "High"].map((level) => (
+                    <button
+                      key={level}
+                      disabled={selectedRisk === level}
+                      onClick={() => setSelectedRisk(level)}
+                      style={{
+                        marginRight: 8,
+                        backgroundColor:
+                          selectedRisk === level ? "#007bff" : "#eee",
+                        color: selectedRisk === level ? "white" : "black",
+                        padding: "6px 12px",
+                        border: "none",
+                        borderRadius: 4,
+                        cursor: "pointer",
+                      }}
+                    >
+                      {level}
+                    </button>
+                  ))}
+                </div>
+                <div style={{ marginTop: 8 }}>
+                  <strong>Select Region: </strong>
+                  {["Asia", "Europe", "US"].map((region) => (
+                    <button
+                      key={region}
+                      disabled={selectedRegion === region}
+                      onClick={() => setSelectedRegion(region)}
+                      style={{
+                        marginRight: 8,
+                        backgroundColor:
+                          selectedRegion === region ? "#007bff" : "#eee",
+                        color: selectedRegion === region ? "white" : "black",
+                        padding: "6px 12px",
+                        border: "none",
+                        borderRadius: 4,
+                        cursor: "pointer",
+                      }}
+                    >
+                      {region}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <button
+                disabled={!selectedRisk || !selectedRegion || isLoading}
+                onClick={() => {
+                  const input = `Suggest a fund for region: ${selectedRegion} and risk level: ${selectedRisk}`;
+                  doSubmit(input);
+                }}
+                style={{
+                  backgroundColor:
+                    !selectedRisk || !selectedRegion ? "#ccc" : "#007bff",
+                  color: "white",
+                  border: "none",
+                  padding: "8px 16px",
+                  borderRadius: 4,
+                  cursor:
+                    !selectedRisk || !selectedRegion
+                      ? "not-allowed"
+                      : "pointer",
+                  marginBottom: 12,
+                }}
+              >
+                Get Fund Suggestion
+              </button>
+
               <label
                 className={clsx(styles["chat-input-panel-inner"], {
                   [styles["chat-input-panel-inner-attach"]]:
